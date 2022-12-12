@@ -1,33 +1,21 @@
 package ru.yandex.practicum.tests;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import praktikum.IngredientType;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
-@RunWith(Parameterized.class)
 public class IngredientTypeTest {
 
-    private final IngredientType ingredientType;
-
-    public IngredientTypeTest(IngredientType ingredientType) {
-        this.ingredientType = ingredientType;
-    }
-
-    @Parameterized.Parameters
-    public static Object[][] getTestData() {
-
-        return new Object[][] {
-                {IngredientType.SAUCE},
-                {IngredientType.FILLING}
-        };
+    @Test
+    public void enumIngredientTypeSauceIsCorrectValue() {
+        IngredientType ingredientTypeSauce = IngredientType.SAUCE;
+        assertEquals("The value of ingredient type SAUCE is correct", IngredientType.valueOf("SAUCE"), ingredientTypeSauce);
     }
 
     @Test
-    public void enumValueIsNotNull() {
-        assertThat("The value of ingredient type is null", ingredientType, notNullValue());
+    public void enumIngredientTypeFillingIsCorrectValue() {
+        IngredientType ingredientTypeFilling = IngredientType.FILLING;
+        assertEquals("The value of ingredient type FILLING is correct", IngredientType.valueOf("FILLING"), ingredientTypeFilling);
     }
 }

@@ -10,9 +10,6 @@ import praktikum.Burger;
 import praktikum.Ingredient;
 import praktikum.IngredientType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -22,98 +19,68 @@ public class BurgerTest {
     @Mock
     Burger burger;
 
-    private final String BUN_NAME = "Пшеничная";
-    private final String MEAT_NAME = "Котлета";
-    private final String CHEESE_NAME = "Сыр";
-    private final String MUSTARD_NAME = "Горчица";
-    private final float BUN_PRICE = 19.5f;
-    private final float MEAT_PRICE = 50.5f;
-    private final float CHEESE_PRICE = 28.35f;
-    private final float MUSTARD_PRICE = 9.15f;
-    Bun wheatBun = new Bun(BUN_NAME, BUN_PRICE);
-    Ingredient meat = new Ingredient(IngredientType.FILLING, MEAT_NAME, MEAT_PRICE);
-    Ingredient cheese = new Ingredient(IngredientType.FILLING, CHEESE_NAME, CHEESE_PRICE);
-    Ingredient mustard = new Ingredient(IngredientType.SAUCE, MUSTARD_NAME, MUSTARD_PRICE);
+    @Mock
+    Bun bun;
+
+    @Mock
+    Ingredient ingredient;
 
     @Test
     public void addIngredientCallsWithCorrectParameter() {
-        burger.addIngredient(meat);
-        Mockito.verify(burger).addIngredient(meat);
+        burger.addIngredient(ingredient);
+        Mockito.verify(burger).addIngredient(ingredient);
     }
 
     @Test
     public void addIngredientCallsMultipleTimesWithParameter() {
-        burger.addIngredient(cheese);
-        burger.addIngredient(cheese);
-        Mockito.verify(burger, Mockito.times(2)).addIngredient(cheese);
+        burger.addIngredient(ingredient);
+        burger.addIngredient(ingredient);
+        Mockito.verify(burger, Mockito.times(2)).addIngredient(ingredient);
     }
 
     @Test
-    public void addIngredientAddsCorrectValue() {
-        Burger burger = new Burger();
-        Ingredient expectedIngredient = meat;
-        burger.addIngredient(meat);
-        assertEquals("The added ingredient does not match the expected result", expectedIngredient, burger.ingredients.get(0));
-    }
-
-    @Test
-    public void removeIngredientRemovesCorrectValue() {
-        Burger burger = new Burger();
-        burger.ingredients.add(meat);
-        burger.ingredients.add(cheese);
-        burger.ingredients.add(mustard);
+    public void removeIngredientCallsWithCorrectParameter() {
         burger.removeIngredient(1);
-        List<Ingredient> expectedIngredients = new ArrayList<>();
-        expectedIngredients.add(meat);
-        expectedIngredients.add(mustard);
-        assertEquals("The list of ingredients does not match the expected result after removing an ingredient",
-                expectedIngredients, burger.ingredients);
+        Mockito.verify(burger).removeIngredient(1);
     }
 
     @Test
-    public void moveIngredientMovesCorrectValue() {
-        Burger burger = new Burger();
-        burger.ingredients.add(meat);
-        burger.ingredients.add(cheese);
-        burger.ingredients.add(mustard);
-        burger.moveIngredient(2, 1);
-        List<Ingredient> expectedIngredients = new ArrayList<>();
-        expectedIngredients.add(meat);
-        expectedIngredients.add(mustard);
-        expectedIngredients.add(cheese);
-        assertEquals("The list of ingredients does not match the expected result after moving an ingredient",
-                expectedIngredients, burger.ingredients);
+    public void removeIngredientCallsMultipleTimesWithParameter() {
+        burger.removeIngredient(0);
+        burger.removeIngredient(0);
+        Mockito.verify(burger, Mockito.times(2)).removeIngredient(0);
     }
 
     @Test
-    public void getPriceStubReturnsCorrectValue() {
+    public void moveIngredientCallsWithCorrectParameter() {
+        burger.moveIngredient(1, 0);
+        Mockito.verify(burger).moveIngredient(1, 0);
+    }
+
+    @Test
+    public void moveIngredientCallsMultipleTimesWithParameter() {
+        burger.moveIngredient(1, 0);
+        burger.moveIngredient(1, 0);
+        Mockito.verify(burger, Mockito.times(2)).moveIngredient(1, 0);
+    }
+
+    @Test
+    public void getPriceReturnsCorrectValue() {
         Mockito.when(burger.getPrice()).thenReturn(125f);
         assertEquals("The burger should have a default price", 125f, burger.getPrice(), 0);
     }
 
-//    @Test
-//    public void getPriceReturnsCorrectValue() {
-//        Burger burger = new Burger();
-//        burger.setBuns(wheatBun);
-//        burger.ingredients.add(meat);
-//        burger.ingredients.add(cheese);
-//        burger.ingredients.add(mustard);
-//        float expectedPrice = 2 * BUN_PRICE + MEAT_PRICE + CHEESE_PRICE + MUSTARD_PRICE;
-//        assertEquals("The burger price does not match the expected result", expectedPrice, burger.getPrice(), 0);
-//    }
-
     @Test
     public void getReceiptReturnsCorrectValues() {
         Burger burger = new Burger();
-        burger.setBuns(wheatBun);
-        burger.ingredients.add(meat);
-        burger.ingredients.add(cheese);
-        burger.ingredients.add(mustard);
+        burger.setBuns(bun);
+        burger.addIngredient(ingredient);
+        Mockito.when(bun.getName()).thenReturn("Сдобная");
+        Mockito.when(ingredient.getName()).thenReturn("Курица");
+        Mockito.when(ingredient.getType()).thenReturn(IngredientType.FILLING);
         String expectedReceipt = burger.getReceipt();
-        assertTrue(expectedReceipt.contains(BUN_NAME));
-        assertTrue(expectedReceipt.contains(MEAT_NAME));
-        assertTrue(expectedReceipt.contains(CHEESE_NAME));
-        assertTrue(expectedReceipt.contains(MUSTARD_NAME));
-        assertTrue(expectedReceipt.contains("Price"));
+        assertTrue("The burger receipt should have the bun name", expectedReceipt.contains("Сдобная"));
+        assertTrue("The burger receipt should have the ingredient name", expectedReceipt.contains("Курица"));
+        assertTrue("The burger receipt should have the price field", expectedReceipt.contains("Price"));
     }
 }
